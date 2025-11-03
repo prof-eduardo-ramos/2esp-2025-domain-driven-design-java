@@ -63,7 +63,10 @@ public class ClienteController {
     }
 
     @PutMapping("/{clienteId}")
-    public void atualizar(@PathVariable UUID clienteId, @RequestBody Object input) {}
+    public ResponseEntity<ClienteOutputDTO> atualizar(@PathVariable UUID clienteId, @RequestBody ClienteInputDTO input) {
+
+        // return ResponseEntity.ok();
+    }
 
     @GetMapping("/{clienteId}/casos")
     public void listarCasos(@PathVariable UUID clienteId) {}
