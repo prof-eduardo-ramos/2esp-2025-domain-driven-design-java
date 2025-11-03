@@ -14,29 +14,25 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.goodman.api.domain.dto.ClienteOutputDTO;
+import com.goodman.api.domain.model.Cliente;
+import com.goodman.api.domain.service.ClienteService;
+import com.goodman.api.mapper.ClienteMapper;
+
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/api/v1/clientes")
+@RequiredArgsConstructor
 public class ClienteController {
+
+    private final ClienteService clienteService;
+
+    private final ClienteMapper clienteMapper;
 
     @GetMapping
     public List<ClienteOutputDTO> listar() {
-        return List.of(
-            new ClienteOutputDTO(
-                UUID.randomUUID(),
-                "Eduardo Ramos",
-                "123.456.789-10",
-                "profeduardo.ramos@fiap.com.br",
-                "+55 21 99196-8868"
-            ),
-            new ClienteOutputDTO(
-                UUID.randomUUID(),
-                "Gabriel Ramos",
-                "123.456.789-10",
-                "gabriel.ramos@mail.com.br",
-                "+55 21 99196-8868"
-            )
-        );
+        List<Cliente> clientes = clienteService.listarTodos();
+        return clienteMapper.tOutputDTOList(clientes);
     }
 
     @GetMapping("/{clienteId}")
