@@ -36,4 +36,11 @@ public class ClienteService {
         );
     }
 
+    public Cliente salvar(Cliente cliente) {
+        return cliente;
+    }
+
+    public void excluir(UUID clienteId) {
+    }
+
 }

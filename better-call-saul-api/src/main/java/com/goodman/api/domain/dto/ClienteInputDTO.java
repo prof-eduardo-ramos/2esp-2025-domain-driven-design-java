@@ -1,5 +1,10 @@
 package com.goodman.api.domain.dto;
 
-public class ClienteInputDTO {
+public record ClienteInputDTO (
+    String nome,
+    String cpfCnpj,
+    String email,
+    String telefone
+) {
 
 }
