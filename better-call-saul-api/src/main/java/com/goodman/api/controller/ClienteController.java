@@ -21,7 +21,13 @@ public class ClienteController {
 
     @GetMapping
     public List<ClienteOutputDTO> listar() {
-        ClienteOutputDTO clienteOutputDTO = new ClienteOutputDTO();
+        ClienteOutputDTO clienteOutputDTO = new ClienteOutputDTO(
+            UUID.randomUUID(),
+            "Eduardo Ramos",
+            "123.456.789-10",
+            "profeduardo.ramos@fiap.com.br",
+            "+55 21 99196-8868"
+        );
         return List.of(clienteOutputDTO);
     }
 
