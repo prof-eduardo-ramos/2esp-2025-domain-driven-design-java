@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Component;
 
+import com.goodman.api.domain.dto.ClienteInputDTO;
 import com.goodman.api.domain.dto.ClienteOutputDTO;
 import com.goodman.api.domain.model.Cliente;
 
@@ -28,6 +29,16 @@ public class ClienteMapper {
                 .map(this::toOutputDTO)
                 .collect(Collectors.toList())
         ;
+    }
+
+    public Cliente toEntity(ClienteInputDTO input) {
+        return 
+            new Cliente(
+                input.nome(),
+                input.cpfCnpj(),
+                input.email(),
+                input.telefone()
+            );
     }
 
 }

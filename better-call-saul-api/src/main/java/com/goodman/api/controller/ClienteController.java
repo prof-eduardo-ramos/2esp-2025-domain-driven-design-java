@@ -1,5 +1,6 @@
 package com.goodman.api.controller;
 
+import java.net.URI;
 import java.util.List;
 import java.util.UUID;
 
@@ -14,7 +15,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.goodman.api.domain.dto.ClienteInputDTO;
 import com.goodman.api.domain.dto.ClienteOutputDTO;
 import com.goodman.api.domain.model.Cliente;
 import com.goodman.api.domain.service.ClienteService;
@@ -44,8 +47,19 @@ public class ClienteController {
     }
 
     @PostMapping
-    public void adicionar(@RequestBody Object input) {
+    @ResponseStatus(code = HttpStatus.CREATED)
+    public ResponseEntity<ClienteOutputDTO> adicionar(@RequestBody ClienteInputDTO input) {
+        Cliente cliente = clienteMapper.toEntity(input);
+        Cliente novoCliente = clienteService.criar(cliente);
+        ClienteOutputDTO outputDTO = clienteMapper.toOutputDTO(novoCliente);
+        
+        URI uri = ServletUriComponentsBuilder
+            .fromCurrentRequest().path("/{id}")
+            .buildAndExpand(outputDTO.id())
+            .toUri()
+        ;
 
+        return ResponseEntity.created(uri).body(outputDTO);
     }
 
     @PutMapping("/{clienteId}")

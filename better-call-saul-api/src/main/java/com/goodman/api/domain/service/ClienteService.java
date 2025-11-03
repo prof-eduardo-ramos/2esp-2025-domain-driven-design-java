@@ -37,4 +37,9 @@ public class ClienteService {
         );
     }
 
+    public Cliente criar(Cliente cliente) {
+        cliente.setId(UUID.randomUUID());
+        return cliente;
+    }
+
 }
