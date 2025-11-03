@@ -1,6 +1,7 @@
 package com.goodman.api.domain.service;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
@@ -25,6 +26,15 @@ public class ClienteService {
                     "+5521991968868"
                 )
             );
+    }
+
+    public Cliente buscarPorId(UUID clienteId) {
+        return new Cliente(
+            "Saul Goodman",
+            "123.456.789-10",
+            "saul@goodman.com",
+            "555 666 777"
+        );
     }
 
 }
