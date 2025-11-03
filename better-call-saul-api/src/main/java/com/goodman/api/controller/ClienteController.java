@@ -15,14 +15,26 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.goodman.api.domain.dto.ClienteInputDTO;
 import com.goodman.api.domain.dto.ClienteOutputDTO;
+import com.goodman.api.domain.model.Cliente;
+import com.goodman.api.domain.service.ClienteService;
+import com.goodman.api.mapper.ClienteMapper;
+
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/api/v1/clientes")
+@RequiredArgsConstructor
 public class ClienteController {
 
+    private final ClienteService clienteService;
+
+    private final ClienteMapper clienteMapper;
+    
     @GetMapping
     public List<ClienteOutputDTO> listar() {
-        return null;
+        List<Cliente> clientes = clienteService.listarTodos();
+        List<ClienteOutputDTO> outputDtoList = clienteMapper.toOutputDtoList(clientes);
+        return outputDtoList;
     }
 
     @GetMapping("/{clienteId}")

@@ -1,5 +1,13 @@
 package com.goodman.api.domain.dto;
 
-public class ClienteOutputDTO {
+import java.util.UUID;
+
+public record ClienteOutputDTO (
+    UUID id,
+    String nome,
+    String cpfCnpj,
+    String email,
+    String telefone
+) {
 
 }
