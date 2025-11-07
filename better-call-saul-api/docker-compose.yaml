@@ -1,0 +1,48 @@
+# Define os serviços (containers) que queremos rodar
+services:
+  
+  # Nome do nosso serviço de banco de dados
+  dman-mysql-db:
+    # Imagem que queremos usar (MySQL versão 8.0)
+    image: mysql:8.0
+    
+    # Nome do container (opcional, mas facilita a identificação)
+    container_name: goodman-mysql-db
+    
+    # Política de reinicialização. 'unless-stopped' reinicia o container
+    # a menos que ele tenha sido parado manualmente.
+    restart: unless-stopped
+    
+    # Variáveis de ambiente para configurar o container do MySQL
+    # ATENÇÃO: Estes valores DEVEM bater com o seu 'application.yaml'
+    environment:
+      MYSQL_ROOT_PASSWORD: goodman@2025  # Corresponde ao 'spring.datasource.password'
+      MYSQL_DATABASE: goodman_db # Corresponde ao nome do schema na URL JDBC
+      # (O usuário 'root' já vem por padrão)
+      
+    # Mapeamento de portas: "PORTA_NO_HOST:PORTA_NO_CONTAINER"
+    # Isso expõe a porta 3306 do container para a porta 3306 da sua máquina local (host).
+    # É por isso que a API (rodando no host) consegue acessar 'localhost:3306'.
+    ports:
+      - "3306:3306"
+      
+    # Volumes para persistir os dados do banco
+    # Sem isso, você perderia todos os dados ao parar/remover o container.
+    volumes:
+      # 'mysql_data' é um "volume nomeado" gerenciado pelo Docker.
+      # '/var/lib/mysql' é o diretório onde o MySQL armazena os dados DENTRO do container.
+      - mysql_data:/var/lib/mysql
+      
+    # Verificação de saúde (opcional, mas recomendado)
+    # O Docker irá verificar se o MySQL está realmente pronto para aceitar conexões.
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-p${MYSQL_ROOT_PASSWORD}"]
+      interval: 10s # Verificar a cada 10 segundos
+      timeout: 5s   # Esperar no máximo 5 segundos pela resposta
+      retries: 5    # Tentar 5 vezes antes de marcar como 'unhealthy'
+
+# Declaração dos volumes nomeados que usamos acima
+volumes:
+  mysql_data:
+    # 'driver: local' é o padrão, mas é bom ser explícito.
+    driver: local

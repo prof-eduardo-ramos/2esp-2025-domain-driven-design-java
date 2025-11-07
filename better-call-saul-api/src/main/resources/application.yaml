@@ -1,3 +1,29 @@
+# Configurações do Servidor
+server:
+  port: 8080 # Porta padrão para o backend (a API)
+
 spring:
     application:
         name: better-call-saul-api
+
+    datasource:
+        url: jdbc:mysql://localhost:3306/goodman_db?createDatabaseIfNotExist=true&useTimezone=true&serverTimezone=UTC
+        username: root
+        password: goodman@2025
+        driver-class-name: com.mysql.cj.jdbc.Driver
+
+    jpa:
+        database-platform: org.hibernate.dialect.MySQLDialect
+        # Estratégia de geração do schema:
+        # 'update': Tenta atualizar o schema existente. Bom para desenvolvimento.
+        # 'validate': Valida se o schema do banco bate com as entidades. Bom para produção.
+        # 'create': Apaga tudo e cria do zero a cada inicialização.
+        # 'none': Não faz nada (requer gerenciamento manual ou Flyway/Liquibase).
+        hibernate:
+            ddl-auto: update
+
+        # Configurações de logging do SQL
+        show-sql: true # Mostra no console todos os comandos SQL executados pelo Hibernate
+        properties:
+            hibernate:
+                format_sql: true # Formata (indenta) o SQL no console para facilitar a leitura
