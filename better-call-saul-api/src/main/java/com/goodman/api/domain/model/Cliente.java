@@ -33,7 +33,11 @@ public class Cliente {
     @Column(nullable = false, length = 150)
     private String nome;
 
-    @Column(nullable = false, length = 18, unique = true)
+    /**
+     * Armazena CPF (11) ou CNPJ (14) sem formatação.
+     * O length=18 é uma segurança para caso queira guardar formatado.
+     */
+    @Column(nullable = false, unique = true, length = 18)
     private String cpfCnpj;
 
     @Column(length = 100)
@@ -46,10 +50,11 @@ public class Cliente {
         mappedBy = "cliente",
         cascade = CascadeType.ALL,
         orphanRemoval = true,
-        fetch = FetchType.LAZY
+        fetch = FetchType.LAZY // Carrega os casos apenas quando cliente.getCasos() for chamado
     )
     private List<Caso> casos = new ArrayList<>();
 
+    // Construtor principal
     public Cliente(String nome, String cpfCnpj, String email, String telefone) {
         this.nome = nome;
         this.cpfCnpj = cpfCnpj;
@@ -58,12 +63,12 @@ public class Cliente {
     }
 
     public void adicionarCaso(Caso caso) {
-        getCasos().add(caso);
+        this.casos.add(caso);
         caso.setCliente(this);
     }
 
     public void removerCaso(Caso caso) {
-        getCasos().remove(caso);
+        this.casos.remove(caso);
         caso.setCliente(null);
     }
 
