@@ -1,4 +1,4 @@
-package com.goodman.api.controller.dto;
+package com.goodman.api.domain.dto;
 
 import java.time.LocalDate;
 import java.util.UUID;

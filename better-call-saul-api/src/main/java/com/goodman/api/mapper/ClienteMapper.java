@@ -5,9 +5,9 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Component;
 
-import com.goodman.api.controller.dto.ClienteInputDTO;
-import com.goodman.api.controller.dto.ClienteOutputDTO;
-import com.goodman.api.controller.dto.ClienteResumoDTO;
+import com.goodman.api.domain.dto.ClienteInputDTO;
+import com.goodman.api.domain.dto.ClienteOutputDTO;
+import com.goodman.api.domain.dto.ClienteResumoDTO;
 import com.goodman.api.domain.model.Cliente;
 
 /**

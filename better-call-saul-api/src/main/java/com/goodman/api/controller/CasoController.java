@@ -14,10 +14,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import com.goodman.api.controller.dto.CasoInputDTO;
-import com.goodman.api.controller.dto.CasoOutputDTO;
-import com.goodman.api.controller.dto.HonorarioInputDTO;
-import com.goodman.api.controller.dto.HonorarioOutputDTO;
+import com.goodman.api.domain.dto.CasoInputDTO;
+import com.goodman.api.domain.dto.CasoOutputDTO;
+import com.goodman.api.domain.dto.HonorarioInputDTO;
+import com.goodman.api.domain.dto.HonorarioOutputDTO;
 import com.goodman.api.domain.model.Caso;
 import com.goodman.api.domain.model.Honorario;
 import com.goodman.api.domain.service.CasoService;

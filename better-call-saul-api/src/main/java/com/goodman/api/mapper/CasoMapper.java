@@ -5,9 +5,9 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Component;
 
-import com.goodman.api.controller.dto.CasoInputDTO;
-import com.goodman.api.controller.dto.CasoOutputDTO;
-import com.goodman.api.controller.dto.ClienteResumoDTO;
+import com.goodman.api.domain.dto.CasoInputDTO;
+import com.goodman.api.domain.dto.CasoOutputDTO;
+import com.goodman.api.domain.dto.ClienteResumoDTO;
 import com.goodman.api.domain.model.Caso;
 
 import lombok.RequiredArgsConstructor;

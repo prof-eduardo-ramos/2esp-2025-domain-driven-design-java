@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.goodman.api.controller.dto.HonorarioOutputDTO;
+import com.goodman.api.domain.dto.HonorarioOutputDTO;
 import com.goodman.api.domain.model.Honorario;
 import com.goodman.api.domain.service.HonorarioService;
 import com.goodman.api.mapper.HonorarioMapper;

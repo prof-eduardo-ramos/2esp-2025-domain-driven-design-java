@@ -17,10 +17,10 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import com.goodman.api.controller.dto.CasoInputDTO;
-import com.goodman.api.controller.dto.CasoOutputDTO;
-import com.goodman.api.controller.dto.ClienteInputDTO;
-import com.goodman.api.controller.dto.ClienteOutputDTO;
+import com.goodman.api.domain.dto.CasoInputDTO;
+import com.goodman.api.domain.dto.CasoOutputDTO;
+import com.goodman.api.domain.dto.ClienteInputDTO;
+import com.goodman.api.domain.dto.ClienteOutputDTO;
 import com.goodman.api.domain.model.Caso;
 import com.goodman.api.domain.model.Cliente;
 import com.goodman.api.domain.service.CasoService;

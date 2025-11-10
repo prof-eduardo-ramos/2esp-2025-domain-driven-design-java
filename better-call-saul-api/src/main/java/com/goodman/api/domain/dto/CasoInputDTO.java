@@ -1,4 +1,4 @@
-package com.goodman.api.controller.dto;
+package com.goodman.api.domain.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;

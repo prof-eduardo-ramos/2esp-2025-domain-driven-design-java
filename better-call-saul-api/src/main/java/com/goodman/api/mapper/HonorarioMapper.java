@@ -5,8 +5,8 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Component;
 
-import com.goodman.api.controller.dto.HonorarioInputDTO;
-import com.goodman.api.controller.dto.HonorarioOutputDTO;
+import com.goodman.api.domain.dto.HonorarioInputDTO;
+import com.goodman.api.domain.dto.HonorarioOutputDTO;
 import com.goodman.api.domain.model.Honorario;
 
 @Component
