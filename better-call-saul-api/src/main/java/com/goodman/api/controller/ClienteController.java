@@ -17,67 +17,96 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import com.goodman.api.domain.dto.ClienteInputDTO;
-import com.goodman.api.domain.dto.ClienteOutputDTO;
+import com.goodman.api.controller.dto.CasoInputDTO;
+import com.goodman.api.controller.dto.CasoOutputDTO;
+import com.goodman.api.controller.dto.ClienteInputDTO;
+import com.goodman.api.controller.dto.ClienteOutputDTO;
+import com.goodman.api.domain.model.Caso;
 import com.goodman.api.domain.model.Cliente;
+import com.goodman.api.domain.service.CasoService;
 import com.goodman.api.domain.service.ClienteService;
+import com.goodman.api.mapper.CasoMapper;
 import com.goodman.api.mapper.ClienteMapper;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/api/v1/clientes")
 @RequiredArgsConstructor
+@RequestMapping("/api/v1/clientes") // Versionamento da API
 public class ClienteController {
-
     private final ClienteService clienteService;
+    private final CasoService casoService;
+    private final ClienteMapper clienteAssembler;
+    private final CasoMapper casoAssembler;
 
-    private final ClienteMapper clienteMapper;
-    
     @GetMapping
-    @ResponseStatus(code = HttpStatus.OK)
     public List<ClienteOutputDTO> listar() {
-        List<Cliente> clientes = clienteService.listarTodos();
-        List<ClienteOutputDTO> outputDtoList = clienteMapper.toOutputDtoList(clientes);
-        return outputDtoList;
+        return clienteAssembler.toOutputDTOList(clienteService.listarTodos());
     }
 
     @GetMapping("/{clienteId}")
-    @ResponseStatus(code = HttpStatus.OK)
     public ResponseEntity<ClienteOutputDTO> buscar(@PathVariable UUID clienteId) {
-        Cliente cliente = clienteService.obterPorId(clienteId);
-        ClienteOutputDTO outputDto = clienteMapper.toOutputDto(cliente);
-        return ResponseEntity.ok(outputDto);
+        Cliente cliente = clienteService.buscarPorId(clienteId); // Lança 404 se não achar
+        return ResponseEntity.ok(clienteAssembler.toOutputDTO(cliente));
     }
 
     @PostMapping
-    @ResponseStatus(code = HttpStatus.CREATED)
-    public ResponseEntity<ClienteOutputDTO> adicionar(@RequestBody ClienteInputDTO input) {
-        Cliente cliente = clienteMapper.toEntity(input);
-        Cliente novoCliente = clienteService.salvar(cliente);
-        ClienteOutputDTO outputDto = clienteMapper.toOutputDto(novoCliente);
-        
-        URI uri = ServletUriComponentsBuilder
-            .fromCurrentRequest()
-            .path("/{id}")
-            .buildAndExpand(outputDto.id())
-            .toUri()
-        ;
+    public ResponseEntity<ClienteOutputDTO> adicionar(@Valid @RequestBody ClienteInputDTO input) {
+        Cliente novoCliente = clienteAssembler.toEntity(input);
+        Cliente clienteSalvo = clienteService.salvar(novoCliente); // Lança 400 se CPF/CNPJ duplicado
+        ClienteOutputDTO output = clienteAssembler.toOutputDTO(clienteSalvo);
 
-        return ResponseEntity.created(uri).body(outputDto);
+        // Retorna 201 Created com o header Location
+        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
+                .buildAndExpand(output.id()).toUri();
+
+        return ResponseEntity.created(uri).body(output);
     }
 
     @PutMapping("/{clienteId}")
-    @ResponseStatus(code = HttpStatus.OK)
-    public ResponseEntity<ClienteOutputDTO> atualizar(@PathVariable UUID clienteId, @RequestBody ClienteInputDTO input) {
-        Cliente cliente = clienteMapper.toEntity(input);
-        Cliente clienteAtualizado = clienteService.salvar(cliente);
-        ClienteOutputDTO outputDto = clienteMapper.toOutputDto(clienteAtualizado);
-        return ResponseEntity.ok(outputDto);
+    public ResponseEntity<ClienteOutputDTO> atualizar(
+            @PathVariable UUID clienteId,
+            @Valid @RequestBody ClienteInputDTO input) {
+
+        // Garante que o cliente existe (ou lança 404)
+        Cliente clienteExistente = clienteService.buscarPorId(clienteId);
+
+        // Copia os dados do DTO para a entidade
+        clienteAssembler.copyToEntity(input, clienteExistente);
+
+        // Salva (e revalida regras de negócio, como duplicidade)
+        Cliente clienteSalvo = clienteService.salvar(clienteExistente);
+
+        return ResponseEntity.ok(clienteAssembler.toOutputDTO(clienteSalvo));
+    }
+
+    // Endpoint 3: Listar casos de UM cliente
+    @GetMapping("/{clienteId}/casos")
+    public List<CasoOutputDTO> listarPorCliente(@PathVariable UUID clienteId) {
+        return casoAssembler.toOutputDTOList(casoService.listarPorCliente(clienteId));
+    }
+
+    // Endpoint 4: Abrir um novo caso para um cliente
+    @PostMapping("/{clienteId}/casos")
+    public ResponseEntity<CasoOutputDTO> abrirCaso(
+            @PathVariable UUID clienteId,
+            @Valid @RequestBody CasoInputDTO input) {
+
+        Caso novoCaso = casoAssembler.toEntity(input);
+        Caso casoSalvo = casoService.abrirNovoCaso(clienteId, novoCaso);
+        CasoOutputDTO output = casoAssembler.toOutputDTO(casoSalvo);
+
+        // Retorna 201 Created com o header Location
+        // A URI é /casos/{id} (o endpoint de busca)
+        URI uri = ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/v1/casos/{id}")
+                .buildAndExpand(output.id()).toUri();
+
+        return ResponseEntity.created(uri).body(output);
     }
 
     @DeleteMapping("/{clienteId}")
-    @ResponseStatus(code = HttpStatus.NO_CONTENT)
+    @ResponseStatus(HttpStatus.NO_CONTENT) // Retorna 204 No Content
     public void excluir(@PathVariable UUID clienteId) {
         clienteService.excluir(clienteId);
     }
