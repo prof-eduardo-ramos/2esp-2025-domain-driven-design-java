@@ -1,5 +1,6 @@
 package com.goodman.api.domain.repository;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -16,4 +17,12 @@ public interface ClienteRepository extends JpaRepository<Cliente, UUID> {
      * @return Um Optional contendo o cliente, se encontrado.
      */
     Optional<Cliente> findByCpfCnpj(String cpfCnpj);
+
+    /**
+     * Busca clientes cujo nome contenha o texto fornecido, ignorando maiúsculas/minúsculas.
+     * Útil para campos de busca na UI.
+     * @param nome O trecho do nome a ser buscado.
+     * @return Uma lista de clientes que correspondem ao critério.
+     */
+    List<Cliente> findByNomeContainingIgnoreCase(String nome);
 }
